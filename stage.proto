@@ -1,0 +1,149 @@
+syntax = "proto3";
+
+import "artifact.proto";
+import "notification.proto";
+
+package spinnakerpb;
+
+message Stage {
+    oneof stage {
+        ManualJudgmentStage manualJudgment = 1;
+        DeployManifestStage deployManifest = 2;
+        BakeManifestStage bakeManifest = 3;
+    }
+}
+
+message StageEnabled {
+    string type = 1;
+    string expression = 2;
+}
+
+message RestrictedExecutionWindow {
+    message Jitter {
+        bool enabled = 1;
+        int32 maxDelay = 2;
+        int32 minDelay = 3;
+        bool skipManual = 4;
+    }
+
+    message Whitelist {
+        int32 endHour = 1;
+        int32 endMin = 2;
+        int32 startHour = 3;
+        int32 startMin = 4;
+    }
+
+    repeated int32 days = 1;
+    Jitter jitter = 2;
+    repeated Whitelist whitelist = 3;
+}
+
+message ManualJudgmentStage {
+    // common
+    string type = 1;
+    string refId = 2;
+    string name = 3;
+    repeated string requisiteStageRefIds = 4;
+
+    bool sendNotifications = 5;
+    repeated Notification notifications = 6;
+
+    int32 stageTimeoutMs = 7;
+    bool completeOtherBranchesThenFail = 8;
+    bool continuePipeline = 9;
+    bool failPipeline = 10;
+    bool failOnFailedExpressions = 11;
+    StageEnabled stageEnabled = 12;
+    bool restrictExecutionDuringTimeWindow = 13;
+    RestrictedExecutionWindow restrictedExecutionWindow = 14;
+    string skipWindowText = 15;
+
+    // fields
+    message JudgmentInput {
+        string value = 1;
+    }
+
+    string instructions = 101;
+    bool propagateAuthenticationContext = 102;
+    repeated JudgmentInput judgmentInputs = 103;
+}
+
+message DeployManifestStage {
+    // common
+    string type = 1;
+    string refId = 2;
+    string name = 3;
+    repeated string requisiteStageRefIds = 4;
+
+    bool sendNotifications = 5;
+    repeated Notification notifications = 6;
+
+    int32 stageTimeoutMs = 7;
+    bool completeOtherBranchesThenFail = 8;
+    bool continuePipeline = 9;
+    bool failPipeline = 10;
+    bool failOnFailedExpressions = 11;
+    StageEnabled stageEnabled = 12;
+    bool restrictExecutionDuringTimeWindow = 13;
+    RestrictedExecutionWindow restrictedExecutionWindow = 14;
+    string skipWindowText = 15;
+
+    // fields
+    message TrafficManagement {
+        message Options {
+            bool enableTraffic = 1;
+            string namespace = 2;
+            repeated string services = 3;
+            string strategy = 4;
+        }
+        bool enabled = 1;
+        Options options = 2;
+    }
+
+    string account = 101;
+    string cloudProvider = 102;
+    Moniker moniker = 103;
+    string namespaceOverride = 104;
+
+    string source = 105;
+    // only used when source = artifact
+    string manifestArtifactAccount = 106;
+    string manifestArtifactId = 107;
+    bool skipExpressionEvaluation = 108;
+    // only used when source = text
+    repeated string manifests = 109;
+
+    repeated string requiredArtifactIds = 110;
+    TrafficManagement trafficManagement = 111;
+
+    repeated ExpectedArtifact expectedArtifacts = 112;
+}
+
+message BakeManifestStage {
+    // common
+    string type = 1;
+    string refId = 2;
+    string name = 3;
+    repeated string requisiteStageRefIds = 4;
+
+    bool sendNotifications = 5;
+    repeated Notification notifications = 6;
+
+    int32 stageTimeoutMs = 7;
+    bool completeOtherBranchesThenFail = 8;
+    bool continuePipeline = 9;
+    bool failPipeline = 10;
+    bool failOnFailedExpressions = 11;
+    StageEnabled stageEnabled = 12;
+    bool restrictExecutionDuringTimeWindow = 13;
+    RestrictedExecutionWindow restrictedExecutionWindow = 14;
+    string skipWindowText = 15;
+
+    // fields
+    string templateRenderer = 101;
+    string outputName = 102;
+    string namespace = 103;
+    repeated InputArtifact inputArtifacts = 104;
+    map<string, string> overrides = 105;
+    repeated ExpectedArtifact expectedArtifacts = 106;
+}

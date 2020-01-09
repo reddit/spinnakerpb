@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package spinnakerpb;
+
+message Message {
+    string text = 1;
+}
+
+message Notification {
+    oneof notification {
+        GithubStatusNotification githubStatus = 1;
+        EmailNotification email = 2;
+        PubsubNotification pubsub = 3;
+        BearychatNotification bearychat = 4;
+        SlackNotification slack = 5;
+        GooglechatNotification googlechat = 6;
+    }
+}
+
+message GithubStatusNotification {
+    // common
+    string type = 1;
+    string level = 2;
+    repeated string when = 3;
+}
+
+message EmailNotification {
+    // common
+    string type = 1;
+    string level = 2;
+    repeated string when = 3;
+
+    // fields
+    string address = 101;
+    string cc = 102;
+    map<string, Message> message = 103;
+}
+
+message PubsubNotification {
+    // common
+    string type = 1;
+    string level = 2;
+    repeated string when = 3;
+
+    // fields
+    string publisherName = 101;
+}
+
+message BearychatNotification {
+    // common
+    string type = 1;
+    string level = 2;
+    repeated string when = 3;
+
+    // fields
+    string address = 101;
+}
+
+message SlackNotification {
+    // common
+    string type = 1;
+    string level = 2;
+    repeated string when = 3;
+
+    // fields
+    string address = 101;
+    map<string, Message> message = 102;
+}
+
+message GooglechatNotification {
+    // common
+    string type = 1;
+    string level = 2;
+    repeated string when = 3;
+
+    // fields
+    string address = 101;
+    map<string, Message> message = 102;
+}

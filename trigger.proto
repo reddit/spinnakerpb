@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package spinnakerpb;
+
+message Trigger {
+    oneof trigger {
+        WebhookTrigger webhook = 1;
+    }
+}
+
+message WebhookTrigger {
+    // common
+    string type = 1;
+    bool enabled = 2;
+    repeated string expectedArtifactIds = 3;
+
+    // fields
+    string source = 101;
+    map<string, string> payloadConstraints = 102;
+}

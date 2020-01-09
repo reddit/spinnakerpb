@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package spinnakerpb;
+
+// TODO(eac): put this in its own .proto file
+message Moniker {
+    string app = 1;
+    string cluster = 2;
+    string stack = 3;
+    string detail = 4;
+}
+
+message Artifact {
+    string kind = 1;
+    string name = 2;
+    string reference = 3;
+    string type = 4;
+    string location = 5;
+    string version = 6;
+    string artifactAccount = 7;
+}
+
+message ExpectedArtifact {
+    string id = 1;
+    string displayName = 2;
+    Artifact defaultArtifact = 3;
+    Artifact matchArtifact = 4;
+    bool useDefaultArtifact = 5;
+    bool usePriorArtifact = 6;
+}
+
+message InputArtifact {
+    string id = 1;
+    string account = 2;
+}

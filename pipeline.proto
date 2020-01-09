@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+import "artifact.proto";
+import "notification.proto";
+import "stage.proto";
+import "trigger.proto";
+
+package spinnakerpb;
+
+message Parameter {
+    message Option {
+        string value = 1;
+    }
+    string default = 1;
+    string description = 2;
+    bool hasOptions = 3;
+    string label = 4;
+    string name = 5;
+    bool required = 6;
+    repeated Option options = 7;
+}
+
+message Pipeline {
+    string id = 1;
+    string application = 2;
+    string name = 3;
+    repeated ExpectedArtifact expectedArtifacts = 4;
+    bool keepWaitingPipelines = 5;
+    string lastModifiedBy = 6;
+    bool limitConcurrent = 7;
+    repeated Notification notifications = 8;
+    repeated Parameter parameterConfig = 9;
+    repeated Stage stages = 10;
+    repeated Trigger triggers = 11;
+    uint64 updateTs = 12;
+}
